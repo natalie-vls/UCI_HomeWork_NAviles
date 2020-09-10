@@ -1,1 +1,1 @@
-This is my first homework assignemnt.
+This is my first homework assignment.
