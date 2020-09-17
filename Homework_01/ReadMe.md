@@ -1,1 +1,1 @@
-First homework asssignemt. Includes an excel and a word document.
+First homework assignment. Includes an excel and a word document.
