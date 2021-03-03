@@ -1,0 +1,86 @@
+Sub stock_years()
+For Each ws In Worksheets
+
+'assign variables
+
+ Dim Ticker As String
+ Dim Yearly_Change As Double
+ Dim Percent_Change As Double
+ Dim Total_Stock_Volume As Double
+ Total_Stock_Volume = 0
+ Dim RowOutput As Long
+ RowOutput = 2
+ Dim PreviousAmount As Long
+ PreviousAmount = 2
+ Dim LastRow As Long
+ Dim Yearly_Open As Double
+ Dim Yearly_Close As Double
+
+ ' create and add headings
+ 
+        Cells(1, "I").Value = "Ticker"
+        Cells(1, "J").Value = "Yearly Change"
+        Cells(1, "K").Value = "Percent Change"
+        Cells(1, "L").Value = "Total Stock Volume"
+ 
+'find the last row
+
+LastRowIndex = ws.Cells(Rows.Count, 1).End(xlUp).Row
+
+'assign range for last row
+
+For i = 2 To LastRowIndex
+
+Total_Stock_Volume = Total_Stock_Volume + ws.Cells(i, 7).Value
+
+'if cells contain different values then assign a name from most previous value
+
+If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+
+'set Ticker variable
+
+Ticker = ws.Cells(i, 1).Value
+ws.Range("I" & RowOutput).Value = Ticker
+ws.Range("L" & RowOutput).Value = Total_Stock_Volume
+Total_Stock_Volume = 0
+
+
+' set  open, close and Yearly Change
+Yearly_Open = ws.Range("C" & PreviousAmount)
+Yearly_Close = ws.Range("F" & i)
+Yearly_Change = Yearly_Close - Yearly_Open
+ws.Range("J" & RowOutput).Value = Yearly_Change
+
+
+'determine percent change
+
+If Yearly_Open = 0 Then
+    Percent_Change = 0
+Else
+    Yearly_Open = ws.Range("C" & RowOutput)
+    Percent_Change = Yearly_Change / Yearly_Open
+End If
+
+'change to percent and decimal
+
+    ws.Range("K" & RowOutput).NumberFormat = "0.00%"
+    ws.Range("K" & RowOutput).Value = Percent_Change
+    
+'conditional formatting
+
+If ws.Range("J" & RowOutput).Value >= 0 Then
+    ws.Range("J" & RowOutput).Interior.ColorIndex = 4
+Else
+    ws.Range("J" & RowOutput).Interior.ColorIndex = 3
+End If
+
+RowOutput = RowOutput + 1
+PreviousAmount = i + 1
+End If
+
+Next i
+
+
+Next ws
+
+End Sub
